@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}{{ event.name }} · AvailGrid{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-lg-9">
+    <h1 class="h4 mb-1">{{ event.name }}</h1>
+    <p class="text-muted mb-4">
+      Timezone: {{ event.timezone }} &middot;
+      <button id="copy_link_btn" class="btn btn-link btn-sm p-0 align-baseline">Copy link to share</button>
+    </p>
+  </div>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-3">
+    <div class="card shadow-sm mb-3">
+      <div class="card-body">
+        <h2 class="h6">Your name</h2>
+        <input type="text" id="participant_name" class="form-control mb-2" placeholder="Your name">
+        <input type="password" id="participant_password" class="form-control mb-2"
+               placeholder="Password (optional, to edit later)">
+        <button id="save_btn" class="btn btn-primary w-100" disabled>Save my availability</button>
+        <div id="save_status" class="form-text mt-2"></div>
+      </div>
+    </div>
+
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h2 class="h6">View</h2>
+        <div class="btn-group w-100 mb-2" role="group">
+          <input type="radio" class="btn-check" name="view_mode" id="mode_edit" checked>
+          <label class="btn btn-outline-secondary btn-sm" for="mode_edit">Edit mine</label>
+
+          <input type="radio" class="btn-check" name="view_mode" id="mode_group">
+          <label class="btn btn-outline-secondary btn-sm" for="mode_group">Group heatmap</label>
+        </div>
+        <p class="small text-muted mb-1">Participants (<span id="participant_count">0</span>)</p>
+        <ul id="participant_list" class="list-unstyled small mb-0"></ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-9">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <div id="hover_info" class="small text-muted mb-2">
+          Drag across the grid to mark when you're free.
+        </div>
+        <div id="grid_wrapper" class="grid-wrapper"></div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  window.EVENT_DATA = {
+    id: {{ event.id | tojson }},
+    columns: {{ columns | tojson }},        // display labels
+    rawColumns: {{ raw_columns | tojson }},  // keys used in slot ids
+    times: {{ times | tojson }}
+  };
+</script>
+<script src="{{ url_for('static', filename='js/grid.js') }}"></script>
+{% endblock %}
